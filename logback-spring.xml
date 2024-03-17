@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+
+    <!--定义日志文件的存储地址 -->
+    <property name="LOG_HOME" value="/home/logs/yinlian"/>
+
+    <!-- 格式化输出 -->
+    <!-- %d 表示日期 -->
+    <!-- %-5level 表示级别，从左开始显示5个字符宽度 -->
+    <!-- %thread 表示线程名 -->
+    <!-- %-30.30logger{30} 表示类名，从左开始显示30个字符宽度，最多显示30个字符宽度，最多输出30个字符宽度 -->
+    <!-- %msg 表示日志消息，%n表示换行符 -->
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread] [%-30.30logger{30}] - %msg%n"/>
+
+    <!-- 输出到控制台 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 输出到文件 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 日志文件输出的文件名 -->
+            <FileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <!-- 日志文件保留的天数 -->
+            <!-- <MaxHistory>-1</MaxHistory> -->
+            <!-- 日志文件的大小 -->
+            <maxFileSize>300MB</maxFileSize>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 日志输出级别 -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>

@@ -1,0 +1,2 @@
+
+先调用这个方法  Sm2Util.testEncryptAndDecrypt
