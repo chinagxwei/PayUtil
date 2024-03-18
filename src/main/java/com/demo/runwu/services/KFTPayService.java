@@ -59,7 +59,7 @@ public class KFTPayService {
         }
     }
 
-    //  主动扫码支付
+    //  公众号支付
     public void initiative_pay_publicno() {
         PublicNoPayReqDTO reqDTO = new PublicNoPayReqDTO();
         reqDTO.setReqNo(String.valueOf(System.currentTimeMillis()));//请求编号

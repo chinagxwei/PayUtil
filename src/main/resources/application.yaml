@@ -1,0 +1,16 @@
+kftpay:
+  connectionTimeoutSeconds: 60
+  responseTimeoutSeconds: 600
+  httpDomain: 'test-sftp.kftpay.com.cn'
+  merchant:
+    keyStorePath: ''
+    keyStorePassword: ''
+    keyPassword: ''
+    MerchantId: '2024031400105169'
+    ip: '127.0.0.1'
+    sftp:
+      domain: 'test-sftp.kftpay.com.cn'
+      account: '2024031400105169'
+      password: ''
+
+
