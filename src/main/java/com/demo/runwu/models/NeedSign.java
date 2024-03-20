@@ -1,4 +1,4 @@
-package com.demo.runwu.controller;
+package com.demo.runwu.models;
 
 public class NeedSign {
     public String privateKey;

@@ -1,13 +1,18 @@
 kftpay:
   connectionTimeoutSeconds: 60
   responseTimeoutSeconds: 600
-  httpDomain: 'test-sftp.kftpay.com.cn'
+  httpDomain: '183.56.161.108'
   merchant:
-    keyStorePath: ''
+    tempZipFilePath: 'c:/zip'
+    keyStorePath: 'e:/keystore/pfx.pfx'
     keyStorePassword: ''
     keyPassword: ''
-    MerchantId: '2024031400105169'
+    merchantId: '2024031400105169'
     ip: '127.0.0.1'
+    wechat:
+      appid: ''
+    alipay:
+      appid: ''
     sftp:
       domain: 'test-sftp.kftpay.com.cn'
       account: '2024031400105169'

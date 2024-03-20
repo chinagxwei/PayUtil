@@ -1,31 +1,27 @@
 package com.demo.runwu.controller;
 
+import com.demo.runwu.models.NeedSign;
 import com.demo.runwu.test.CommonUtil;
-import com.demo.runwu.test.Sm2KeyPair;
 import com.demo.runwu.test.Sm2Util;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.logging.Level;
 
 @Slf4j
 @Controller
 public class IndexController {
 
-    @RequestMapping("/index")
+    @RequestMapping({"", "/", "/index"})
     @ResponseBody
     public String index() {
-        return "hello world";
+        return "Pay";
     }
 
     @RequestMapping("/sign")
