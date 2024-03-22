@@ -1,6 +1,7 @@
 package com.demo.runwu.controller;
 
 import com.demo.runwu.models.BaseResponse;
+import com.demo.runwu.models.DataResponse;
 import com.demo.runwu.services.KFTConfigCheckService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ class CheckConfigController {
 
     @RequestMapping("/kft-config")
     public ResponseEntity<?> kftconfig(){
-        return ResponseEntity.ok(new BaseResponse<>(kftConfigCheckService).isSuccess());
+        return ResponseEntity.ok(new DataResponse<>(kftConfigCheckService).isSuccess());
     }
 
 }

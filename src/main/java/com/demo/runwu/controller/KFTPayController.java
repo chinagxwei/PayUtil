@@ -2,6 +2,7 @@ package com.demo.runwu.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.demo.runwu.models.BaseResponse;
+import com.demo.runwu.models.DataResponse;
 import com.demo.runwu.models.KFTMerchantBaseInfo;
 import com.demo.runwu.models.KFTPayPublicno;
 import com.demo.runwu.services.KFTMerchantService;
@@ -47,7 +48,7 @@ public class KFTPayController {
         if (data != null) {
             try {
                 SettledSecMerchantResponseDTO res = kftMerchantService.init().merchantBaseInfoAdd(requestData);
-                return ResponseEntity.ok(new BaseResponse(JSON.toJSONString(res)).isSuccess());
+                return ResponseEntity.ok(new DataResponse<>(res).isSuccess());
             } catch (Exception e) {
                 return ResponseEntity.ok(new BaseResponse(e.getMessage()).isError());
             }
@@ -67,7 +68,7 @@ public class KFTPayController {
         if (data != null) {
             try {
                 PublicNoPayRespDTO res = kftPayService.init().initiative_pay_publicno(requestData);
-                return ResponseEntity.ok(new BaseResponse(JSON.toJSONString(res)).isSuccess());
+                return ResponseEntity.ok(new DataResponse<>(res).isSuccess());
             } catch (Exception e) {
                 return ResponseEntity.ok(new BaseResponse(e.getMessage()).isError());
             }
