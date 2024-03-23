@@ -1,13 +1,13 @@
 kftpay:
   connectionTimeoutSeconds: 60
   responseTimeoutSeconds: 600
-  httpDomain: '183.56.161.108'
+  httpDomain: 'test-merchant.kftpay.com.cn'
   merchant:
     notifyUrl: '"www.baidu.com"'
     tempZipFilePath: 'c:/zip'
     keyStorePath: 'e:/keystore/pfx.pfx'
-    keyStorePassword: '105169'
-    keyPassword: '105169'
+    keyStorePassword: '123456'
+    keyPassword: '123456'
     merchantId: '2024031400105169'
     ip: '127.0.0.1'
     wechat:
@@ -16,6 +16,6 @@ kftpay:
       appid: ''
     sftp:
       domain: 'test-sftp.kftpay.com.cn'
-      password: ''
+      password: '105169'
 
 
