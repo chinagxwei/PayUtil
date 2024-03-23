@@ -37,8 +37,6 @@ public class KFTMerchantService {
     private String merchantId;
     @Value("${kftpay.merchant.sftp.domain}")
     private String sftpDomain;
-    @Value("${kftpay.merchant.sftp.account}")
-    private String sftpAccountName;
     @Value("${kftpay.merchant.sftp.password}")
     private String sftpPassword;
 
@@ -49,7 +47,7 @@ public class KFTMerchantService {
         service.setHttpDomain(httpDomain); // 测试环境交易请求Http地址，不设置默认为生产地址：merchant.kftpay.com.cn
         service.setConnectionTimeoutSeconds(1 * 60);// 连接超时时间（单位秒）,不设置则默认30秒
         service.setResponseTimeoutSeconds(10 * 60);// 响应超时时间（单位秒）,不设置则默认300秒
-        service.setSftpAccountName(sftpAccountName);//sftp账号,与商户账户编号相同（MerchantId）
+        service.setSftpAccountName(merchantId);//sftp账号,与商户账户编号相同（MerchantId）
         service.setSftpPassword(sftpPassword);//sftp密码 测试环境:账号后6位
         service.setSftpDomain(sftpDomain);//sftp域名
         return this;

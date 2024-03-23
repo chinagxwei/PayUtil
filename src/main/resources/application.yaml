@@ -6,8 +6,8 @@ kftpay:
     notifyUrl: '"www.baidu.com"'
     tempZipFilePath: 'c:/zip'
     keyStorePath: 'e:/keystore/pfx.pfx'
-    keyStorePassword: ''
-    keyPassword: ''
+    keyStorePassword: '105169'
+    keyPassword: '105169'
     merchantId: '2024031400105169'
     ip: '127.0.0.1'
     wechat:
@@ -16,7 +16,6 @@ kftpay:
       appid: ''
     sftp:
       domain: 'test-sftp.kftpay.com.cn'
-      account: '2024031400105169'
       password: ''
 
 
