@@ -17,5 +17,3 @@ kftpay:
     sftp:
       domain: 'test-sftp.kftpay.com.cn'
       password: '105169'
-
-

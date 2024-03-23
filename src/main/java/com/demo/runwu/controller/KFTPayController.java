@@ -3,6 +3,7 @@ package com.demo.runwu.controller;
 import com.alibaba.fastjson.JSON;
 import com.demo.runwu.models.BaseResponse;
 import com.demo.runwu.models.KFTMerchantBaseInfo;
+import com.demo.runwu.models.KFTMerchantFile;
 import com.demo.runwu.models.KFTPayPublicno;
 import com.demo.runwu.services.KFTMerchantService;
 import com.demo.runwu.services.KFTPayService;
@@ -48,6 +49,26 @@ public class KFTPayController {
             try {
                 SettledSecMerchantResponseDTO res = kftMerchantService.init().merchantBaseInfoAdd(requestData);
                 return ResponseEntity.ok(new BaseResponse(JSON.toJSONString(res)).isSuccess());
+            } catch (Exception e) {
+                return ResponseEntity.ok(new BaseResponse(e.getMessage()).isError());
+            }
+        }
+        return ResponseEntity.ok(new BaseResponse("data error").isError());
+    }
+
+    @RequestMapping("/upload-merchant-file")
+    public ResponseEntity<?> uploadMerchantFile(@RequestBody String data) {
+        log.info(data);
+        Gson gson = new Gson();
+        Type type = new TypeToken<KFTMerchantFile>() {
+        }.getType();
+
+        KFTMerchantFile requestData = gson.fromJson(data, type);
+
+        if (data != null) {
+            try {
+                kftMerchantService.init().uploadFile(requestData.localFilePath);
+                return ResponseEntity.ok(new BaseResponse("success").isSuccess());
             } catch (Exception e) {
                 return ResponseEntity.ok(new BaseResponse(e.getMessage()).isError());
             }

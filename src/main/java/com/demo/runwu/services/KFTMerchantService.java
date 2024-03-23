@@ -1,5 +1,6 @@
 package com.demo.runwu.services;
 
+import com.alibaba.fastjson.JSON;
 import com.demo.runwu.models.KFTMerchantBaseInfo;
 import com.lycheepay.gateway.client.GatewayClientException;
 import com.lycheepay.gateway.client.KftSecMerchantService;
@@ -84,6 +85,7 @@ public class KFTMerchantService {
 
 //        reqDTO.setCorpCertInfo("[{\"certNo\":\"440305199109241211\",\"certType\":\"0\",\"certValidDate\":\"20991231\"},{\"certNo\":\"11311788100133ABB1\",\"certType\":\"Y\",\"certValidDate\":\"20991231\"}]");
         reqDTO.setCertPath(kftMerchantBaseInfo.fileName);//SFTP目录下的地址，默认在mpp目录下
+        reqDTO.setCustBeneficiaryInfo(JSON.toJSONString(kftMerchantBaseInfo.custBeneficiaryInfo));
         String certDigest = KFTMerchantService.md5File(kftMerchantBaseInfo.localFilePath);
         reqDTO.setCertDigest(certDigest);//上报文件签名
 
@@ -96,13 +98,9 @@ public class KFTMerchantService {
         return service.settledSecMerchant(reqDTO);
     }
 
-    public void uploadFile(String localFilePath) {
-        try {
-            String remotePath = "/cashier/mpp";
-            service.uploadFile(localFilePath, remotePath);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void uploadFile(String localFilePath) throws GatewayClientException {
+        String remotePath = "/cashier/mpp";
+        service.uploadFile(localFilePath, remotePath);
     }
 
     /**

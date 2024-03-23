@@ -1,6 +1,7 @@
 package com.demo.runwu.models;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class KFTMerchantBaseInfo implements Serializable {
     public String fileName;
@@ -20,10 +21,11 @@ public class KFTMerchantBaseInfo implements Serializable {
     public String settleBankNo;
     public String settleBankAccountNo;
     public String settleName;
+    public List<KFTCustBeneficiary> custBeneficiaryInfo;
 
     @Override
     public String toString() {
-        return "KFTMerchantBaseInfo(" +
+        return "KFTMerchantBaseInfo{" +
                 "fileName='" + fileName + '\'' +
                 ", localFilePath='" + localFilePath + '\'' +
                 ", secMerchantName='" + secMerchantName + '\'' +
@@ -41,6 +43,7 @@ public class KFTMerchantBaseInfo implements Serializable {
                 ", settleBankNo='" + settleBankNo + '\'' +
                 ", settleBankAccountNo='" + settleBankAccountNo + '\'' +
                 ", settleName='" + settleName + '\'' +
-                ')';
+                ", custBeneficiaryInfo=" + custBeneficiaryInfo +
+                '}';
     }
 }
