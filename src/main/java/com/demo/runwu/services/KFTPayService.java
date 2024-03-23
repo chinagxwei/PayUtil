@@ -21,6 +21,8 @@ public class KFTPayService {
 
     @Value("${kftpay.httpDomain}")
     private String httpDomain;
+    @Value("${kftpay.merchant.notifyUrl}")
+    private String notifyUrl;
     @Value("${kftpay.merchant.ip}")
     private String merchantIp;
     @Value("${kftpay.merchant.keyStorePath}")
@@ -56,7 +58,7 @@ public class KFTPayService {
         //reqDTO.setSecMerchantId("");//二级商户ID，可空， 商户为平台商时必填，调用“二级商户入驻接口”生成
         reqDTO.setOrderNo(kftPayPublicno.orderNo);//交易编号
         reqDTO.setTerminalIp(kftPayPublicno.terminalIp); //APP和网页支付提交用户端ip，主扫支付填调用付API的机器IP
-        reqDTO.setNotifyUrl("www.baidu.com");//必须可直接访问的url，不能携带参数
+        reqDTO.setNotifyUrl(notifyUrl);//必须可直接访问的url，不能携带参数
         reqDTO.setProductId(kftPayPublicno.productId);//此id为二维码中包含的商品ID，商户自行定义
         reqDTO.setAmount(kftPayPublicno.Amount);//此次交易的具体金额,单位:分,不支持小数点
         //reqDTO.setPlatMerchSubsidyAmt("");//此次交易商户补贴金额,单位:分,可空

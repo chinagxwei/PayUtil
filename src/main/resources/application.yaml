@@ -3,6 +3,7 @@ kftpay:
   responseTimeoutSeconds: 600
   httpDomain: '183.56.161.108'
   merchant:
+    notifyUrl: '"www.baidu.com"'
     tempZipFilePath: 'c:/zip'
     keyStorePath: 'e:/keystore/pfx.pfx'
     keyStorePassword: ''
