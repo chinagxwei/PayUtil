@@ -6,7 +6,7 @@ public class KFTPayPublicno implements Serializable {
     public String orderNo;
     public String terminalIp;
     public String productId;
-    public String Amount;
+    public String amount;
     public String tradeName;
     public String tradeTime;
     public String userOpenId;
@@ -18,7 +18,7 @@ public class KFTPayPublicno implements Serializable {
                 "orderNo='" + orderNo + '\'' +
                 ", terminalIp='" + terminalIp + '\'' +
                 ", productId='" + productId + '\'' +
-                ", Amount='" + Amount + '\'' +
+                ", amount='" + amount + '\'' +
                 ", tradeName='" + tradeName + '\'' +
                 ", tradeTime='" + tradeTime + '\'' +
                 ", userOpenId='" + userOpenId + '\'' +

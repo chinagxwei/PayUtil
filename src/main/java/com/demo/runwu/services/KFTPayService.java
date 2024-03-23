@@ -60,7 +60,7 @@ public class KFTPayService {
         reqDTO.setTerminalIp(kftPayPublicno.terminalIp); //APP和网页支付提交用户端ip，主扫支付填调用付API的机器IP
         reqDTO.setNotifyUrl(notifyUrl);//必须可直接访问的url，不能携带参数
         reqDTO.setProductId(kftPayPublicno.productId);//此id为二维码中包含的商品ID，商户自行定义
-        reqDTO.setAmount(kftPayPublicno.Amount);//此次交易的具体金额,单位:分,不支持小数点
+        reqDTO.setAmount(kftPayPublicno.amount);//此次交易的具体金额,单位:分,不支持小数点
         //reqDTO.setPlatMerchSubsidyAmt("");//此次交易商户补贴金额,单位:分,可空
         reqDTO.setCurrency("CNY");//币种
         reqDTO.setTradeName(kftPayPublicno.tradeName);//商品描述,简要概括此次交易的内容.可能会在用户App上显示
