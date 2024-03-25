@@ -4,8 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.demo.runwu.models.KFTMerchantBaseInfo;
 import com.lycheepay.gateway.client.GatewayClientException;
 import com.lycheepay.gateway.client.KftSecMerchantService;
-import com.lycheepay.gateway.client.dto.secmerchant.SettledSecMerchantRequestDTO;
-import com.lycheepay.gateway.client.dto.secmerchant.SettledSecMerchantResponseDTO;
+import com.lycheepay.gateway.client.dto.secmerchant.*;
 import com.lycheepay.gateway.client.security.KeystoreSignProvider;
 import com.lycheepay.gateway.client.security.SignProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -88,7 +87,7 @@ public class KFTMerchantService {
 
 //        reqDTO.setCorpCertInfo("[{\"certNo\":\"440305199109241211\",\"certType\":\"0\",\"certValidDate\":\"20991231\"},{\"certNo\":\"11311788100133ABB1\",\"certType\":\"Y\",\"certValidDate\":\"20991231\"}]");
         reqDTO.setCertPath(kftMerchantBaseInfo.fileName);//SFTP目录下的地址，默认在mpp目录下
-        log.info(JSON.toJSONString(kftMerchantBaseInfo.custBeneficiaryInfo));
+//        log.info(JSON.toJSONString(kftMerchantBaseInfo.custBeneficiaryInfo));
         reqDTO.setCorpCertInfo(JSON.toJSONString(kftMerchantBaseInfo.corpCertInfo));
         reqDTO.setCustBeneficiaryInfo(JSON.toJSONString(kftMerchantBaseInfo.custBeneficiaryInfo));
         String certDigest = KFTMerchantService.md5File(kftMerchantBaseInfo.localFilePath);
@@ -101,6 +100,65 @@ public class KFTMerchantService {
 //        reqDTO.setMerchantBankBranchName(merchantBankBranchName);
 
         return service.settledSecMerchant(reqDTO);
+    }
+
+
+    public BaseSecMerchantRespDTO merchantBaseInfoUpdate(KFTMerchantBaseInfo kftMerchantBaseInfo) throws GatewayClientException, IOException {
+        UpdateSecMerchantRequestDTO reqDTO = new UpdateSecMerchantRequestDTO();
+        reqDTO.setReqNo(String.valueOf(System.currentTimeMillis()));//请求编号
+        reqDTO.setOrderNo(String.valueOf(System.currentTimeMillis()));//用于标识商户发起的一笔交易
+        reqDTO.setService("amp_secmerchant_baseinfo_update");//接口名称，固定不变
+        reqDTO.setVersion("1.0.0-IEST");//接口版本号，测试:1.0.0-IEST,生产:1.0.0-PRD
+        reqDTO.setMerchantId(merchantId);//快付通配给商户的账户编号（测试和生产环境不同）
+        reqDTO.setSecMerchantName(kftMerchantBaseInfo.secMerchantName);//二级商户名称
+        reqDTO.setShortName(kftMerchantBaseInfo.shortName);//会显示在用户订单信息中
+        //reqDTO.setProvince(province);//可空
+        //reqDTO.setCity(city);//可空
+        reqDTO.setDistrict(kftMerchantBaseInfo.district);//注册地址区县编码
+        reqDTO.setAddress(kftMerchantBaseInfo.address);//地址
+        reqDTO.setLegalName(kftMerchantBaseInfo.legalName);//法人姓名,如果是个人商户，填个人商户姓名
+        reqDTO.setContactName(kftMerchantBaseInfo.contactName);//联系人名称
+        reqDTO.setContactPhone(kftMerchantBaseInfo.contactPhone);//联系人手机号
+        reqDTO.setContactEmail(kftMerchantBaseInfo.contactEmail);//联系人邮箱
+        reqDTO.setCategory(kftMerchantBaseInfo.category);//经营类目
+        reqDTO.setBusinessScene(kftMerchantBaseInfo.businessScene);//业务场景说明
+        reqDTO.setBusinessMode(kftMerchantBaseInfo.businessMode);
+        reqDTO.setMerchantProperty("3");//商户类型：1：个人、2：企业、3：个体工商户、4：事业单位
+        reqDTO.setCategory("\"[\\\"010101\\\",\\\"010102\\\",\\\"010201\\\",\\\"010202\\\"]\"");//经营类目
+        reqDTO.setBusinessScene("");//业务场景说明
+        reqDTO.setRemark("");//可空，介绍商户营业内容等
+        reqDTO.setCertPath(kftMerchantBaseInfo.fileName);//SFTP目录下的地址，默认在mpp目录下
+        String certDigest = KFTMerchantService.md5File(kftMerchantBaseInfo.localFilePath);
+        reqDTO.setCertDigest(certDigest);//上报文件签名
+//        reqDTO.setProductFees("[{\"feeOfAttach\":\"0\",\"feeOfRate\":\"1300\",\"feeType\":\"3\",\"productId\":\"010101\"},{\"feeOfAttach\":\"0\",\"feeOfRate\":\"1300\",\"feeType\":\"3\",\"productId\":\"010601\",\"creditOrDebit\":\"1\"}]");
+        reqDTO.setSettleBankAccount("{\"settleAccountCreditOrDebit\":\"1\",\"settleBankAccountNo\":\"" + kftMerchantBaseInfo.settleBankAccountNo + "\",\"settleBankAcctType\":\"2\",\"settleBankNo\":\"" + kftMerchantBaseInfo.settleBankNo + "\",\"settleName\":\"" + kftMerchantBaseInfo.settleName + "\"}");
+        reqDTO.setCorpCertInfo(JSON.toJSONString(kftMerchantBaseInfo.corpCertInfo));
+        reqDTO.setCustBeneficiaryInfo(JSON.toJSONString(kftMerchantBaseInfo.custBeneficiaryInfo));
+        //reqDTO.setPersonCertInfo(personCertInfo);
+//        reqDTO.setCorpCertInfo("[{\"certNo\":\"999999999999\",\"certType\":\"0\",\"certValidDate\":\"20220930\"},{\"certNo\":\"99999999999999\",\"certType\":\"Y\",\"certValidDate\":\"20210930\"}]");
+        reqDTO.setMerchantAttribute("1");//商户属性 1实体特约商户 2 网络特约商户 3 实体兼网络特约商户
+        //reqDTO.setIcpRecord("");//ICP备案号,可空,如果商户属性是2，3必填
+        //reqDTO.setServiceIp("");//网站服务器IP,可空,如果商户属性是2，3必填
+        //reqDTO.setCompanyWebUrl("");//经营网址,可空,如果商户属性是2，3必填
+//        reqDTO.setMerchantOperateName("(特约)测试(多媒体)");
+//        reqDTO.setMerchantMCC("4816");
+//        reqDTO.setMerchantEnglishName("ABC");
+//        reqDTO.setMerchantBankBranchNo("105337000019");
+//        reqDTO.setMerchantBankBranchName("中国建设银行绍兴分行");
+
+        return service.updateSecMerchant(reqDTO);
+    }
+
+    public QuerySecMerchantResponseDTO merchantBaseInfoQuery(String certNo) throws GatewayClientException {
+        QuerySecMerchantRequestDTO reqDTO = new QuerySecMerchantRequestDTO();
+        reqDTO.setService("amp_secmerchant_baseinfo_query");//接口名称，固定不变
+        reqDTO.setVersion("1.0.0-IEST");//测试：1.0.0-IEST,生产：1.0.0-PRD
+        reqDTO.setMerchantId("2024031400105169");//快付通配给商户的账户编号（测试和生产环境不同）
+        reqDTO.setMerchantProperty("3");//商户类型：1：个人2：企业3：个体工商户4：事业单位
+        reqDTO.setCertNo(certNo);//商户类型是2、3传营业执照,1传身份证号
+//        reqDTO.setOrderNo("");//查询交易编号,对应新增或者修改里面的同名参数orderNo值
+
+        return service.querySecMerchant(reqDTO);
     }
 
     public void uploadFile(String localFilePath) throws GatewayClientException {

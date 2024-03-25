@@ -1,16 +1,14 @@
 package com.demo.runwu.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.demo.runwu.models.BaseResponse;
-import com.demo.runwu.models.DataResponse;
-import com.demo.runwu.models.KFTMerchantBaseInfo;
-import com.demo.runwu.models.KFTMerchantFile;
-import com.demo.runwu.models.KFTPayPublicno;
+import com.demo.runwu.models.*;
 import com.demo.runwu.services.KFTMerchantService;
 import com.demo.runwu.services.KFTPayService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lycheepay.gateway.client.dto.initiativepay.PublicNoPayRespDTO;
+import com.lycheepay.gateway.client.dto.secmerchant.BaseSecMerchantRespDTO;
+import com.lycheepay.gateway.client.dto.secmerchant.QuerySecMerchantResponseDTO;
 import com.lycheepay.gateway.client.dto.secmerchant.SettledSecMerchantResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +47,46 @@ public class KFTPayController {
         if (data != null) {
             try {
                 SettledSecMerchantResponseDTO res = kftMerchantService.init().merchantBaseInfoAdd(requestData);
+                return ResponseEntity.ok(new DataResponse<>(res).isSuccess());
+            } catch (Exception e) {
+                return ResponseEntity.ok(new BaseResponse(e.getMessage()).isError());
+            }
+        }
+        return ResponseEntity.ok(new BaseResponse("data error").isError());
+    }
+
+    @RequestMapping("/merchant-update")
+    public ResponseEntity<?> merchantUpdate(@RequestBody String data) {
+        log.info(data);
+        Gson gson = new Gson();
+        Type type = new TypeToken<KFTMerchantBaseInfo>() {
+        }.getType();
+
+        KFTMerchantBaseInfo requestData = gson.fromJson(data, type);
+
+        if (data != null) {
+            try {
+                BaseSecMerchantRespDTO res = kftMerchantService.init().merchantBaseInfoUpdate(requestData);
+                return ResponseEntity.ok(new DataResponse<>(res).isSuccess());
+            } catch (Exception e) {
+                return ResponseEntity.ok(new BaseResponse(e.getMessage()).isError());
+            }
+        }
+        return ResponseEntity.ok(new BaseResponse("data error").isError());
+    }
+
+    @RequestMapping("/merchant-query")
+    public ResponseEntity<?> merchantQuery(@RequestBody String data) {
+        log.info(data);
+        Gson gson = new Gson();
+        Type type = new TypeToken<KFTMerchantQuery>() {
+        }.getType();
+
+        KFTMerchantQuery requestData = gson.fromJson(data, type);
+
+        if (data != null) {
+            try {
+                QuerySecMerchantResponseDTO res = kftMerchantService.init().merchantBaseInfoQuery(requestData.certNo);
                 return ResponseEntity.ok(new DataResponse<>(res).isSuccess());
             } catch (Exception e) {
                 return ResponseEntity.ok(new BaseResponse(e.getMessage()).isError());
