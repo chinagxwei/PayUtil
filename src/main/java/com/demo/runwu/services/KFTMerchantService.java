@@ -1,5 +1,6 @@
 package com.demo.runwu.services;
 
+import com.alibaba.fastjson.JSON;
 import com.demo.runwu.models.KFTMerchantBaseInfo;
 import com.lycheepay.gateway.client.GatewayClientException;
 import com.lycheepay.gateway.client.KftSecMerchantService;
@@ -37,8 +38,6 @@ public class KFTMerchantService {
     private String merchantId;
     @Value("${kftpay.merchant.sftp.domain}")
     private String sftpDomain;
-    @Value("${kftpay.merchant.sftp.account}")
-    private String sftpAccountName;
     @Value("${kftpay.merchant.sftp.password}")
     private String sftpPassword;
 
@@ -49,7 +48,7 @@ public class KFTMerchantService {
         service.setHttpDomain(httpDomain); // 测试环境交易请求Http地址，不设置默认为生产地址：merchant.kftpay.com.cn
         service.setConnectionTimeoutSeconds(1 * 60);// 连接超时时间（单位秒）,不设置则默认30秒
         service.setResponseTimeoutSeconds(10 * 60);// 响应超时时间（单位秒）,不设置则默认300秒
-        service.setSftpAccountName(sftpAccountName);//sftp账号,与商户账户编号相同（MerchantId）
+        service.setSftpAccountName(merchantId);//sftp账号,与商户账户编号相同（MerchantId）
         service.setSftpPassword(sftpPassword);//sftp密码 测试环境:账号后6位
         service.setSftpDomain(sftpDomain);//sftp域名
         return this;
@@ -86,6 +85,7 @@ public class KFTMerchantService {
 
 //        reqDTO.setCorpCertInfo("[{\"certNo\":\"440305199109241211\",\"certType\":\"0\",\"certValidDate\":\"20991231\"},{\"certNo\":\"11311788100133ABB1\",\"certType\":\"Y\",\"certValidDate\":\"20991231\"}]");
         reqDTO.setCertPath(kftMerchantBaseInfo.fileName);//SFTP目录下的地址，默认在mpp目录下
+        reqDTO.setCustBeneficiaryInfo(JSON.toJSONString(kftMerchantBaseInfo.custBeneficiaryInfo));
         String certDigest = KFTMerchantService.md5File(kftMerchantBaseInfo.localFilePath);
         reqDTO.setCertDigest(certDigest);//上报文件签名
 
@@ -98,13 +98,9 @@ public class KFTMerchantService {
         return service.settledSecMerchant(reqDTO);
     }
 
-    public void uploadFile(String localFilePath) {
-        try {
-            String remotePath = "/cashier/mpp";
-            service.uploadFile(localFilePath, remotePath);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void uploadFile(String localFilePath) throws GatewayClientException {
+        String remotePath = "/cashier/mpp";
+        service.uploadFile(localFilePath, remotePath);
     }
 
     /**
