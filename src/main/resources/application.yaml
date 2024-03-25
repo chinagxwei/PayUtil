@@ -1,4 +1,5 @@
 kftpay:
+  version: '1.0.0-IEST'
   connectionTimeoutSeconds: 60
   responseTimeoutSeconds: 600
   httpDomain: 'test-merchant.kftpay.com.cn'

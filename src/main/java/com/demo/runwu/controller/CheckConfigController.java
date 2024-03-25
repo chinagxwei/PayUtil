@@ -1,10 +1,8 @@
 package com.demo.runwu.controller;
 
 import com.demo.runwu.models.BaseResponse;
-import com.demo.runwu.models.DataResponse;
-import com.demo.runwu.services.KFTConfigCheckService;
-import com.demo.runwu.services.KFTMerchantService;
 import com.demo.runwu.services.KFTMerchantTest;
+import com.demo.runwu.utils.KFTConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 class CheckConfigController {
 
     @Autowired
-    private KFTConfigCheckService kftConfigCheckService;
+    private KFTConfig kftConfig;
 
     @Autowired
     private KFTMerchantTest kftMerchantTest;
 
     @RequestMapping("/kft-config")
     public ResponseEntity<?> kftconfig(){
-        return ResponseEntity.ok(new BaseResponse(kftConfigCheckService.toString()).isSuccess());
+        return ResponseEntity.ok(new BaseResponse(kftConfig.toString()).isSuccess());
     }
 
     @RequestMapping("/kft-test")

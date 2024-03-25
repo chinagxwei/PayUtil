@@ -1,37 +1,40 @@
-package com.demo.runwu.services;
+package com.demo.runwu.utils;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-public class KFTConfigCheckService {
-
+@Component
+public class KFTConfig {
+    @Value("${kftpay.version}")
+    public String version;
     @Value("${kftpay.httpDomain}")
-    private String httpDomain;
+    public String httpDomain;
     @Value("${kftpay.merchant.ip}")
-    private String merchantIp;
+    public String merchantIp;
     @Value("${kftpay.merchant.keyStorePath}")
-    private String keyStorePath;
+    public String keyStorePath;
     @Value("${kftpay.merchant.keyStorePassword}")
-    private String keyStorePassword;
+    public String keyStorePassword;
     @Value("${kftpay.merchant.keyPassword}")
-    private String keyPassword;
+    public String keyPassword;
     @Value("${kftpay.merchant.tempZipFilePath}")
-    private String tempZipFilePath;
+    public String tempZipFilePath;
     @Value("${kftpay.merchant.merchantId}")
-    private String merchantId;
+    public String merchantId;
     @Value("${kftpay.merchant.sftp.domain}")
-    private String sftpDomain;
+    public String sftpDomain;
     @Value("${kftpay.merchant.sftp.password}")
-    private String sftpPassword;
+    public String sftpPassword;
     @Value("${kftpay.merchant.wechat.appid}")
-    private String wechatPayAppID;
+    public String wechatPayAppID;
     @Value("${kftpay.merchant.alipay.appid}")
-    private String aliPayAppID;
+    public String aliPayAppID;
+    @Value("${kftpay.merchant.notifyUrl}")
+    public String notifyUrl;
 
     @Override
     public String toString() {
-        return "KFTConfigCheckService(" +
+        return "KFTConfig{" +
                 "httpDomain='" + httpDomain + '\'' +
                 ", merchantIp='" + merchantIp + '\'' +
                 ", keyStorePath='" + keyStorePath + '\'' +
@@ -43,6 +46,7 @@ public class KFTConfigCheckService {
                 ", sftpPassword='" + sftpPassword + '\'' +
                 ", wechatPayAppID='" + wechatPayAppID + '\'' +
                 ", aliPayAppID='" + aliPayAppID + '\'' +
-                ')';
+                ", notifyUrl='" + notifyUrl + '\'' +
+                '}';
     }
 }

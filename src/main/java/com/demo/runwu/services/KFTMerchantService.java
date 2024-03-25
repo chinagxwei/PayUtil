@@ -2,6 +2,9 @@ package com.demo.runwu.services;
 
 import com.alibaba.fastjson.JSON;
 import com.demo.runwu.models.KFTMerchantBaseInfo;
+import com.demo.runwu.models.KFTMerchantQuery;
+import com.demo.runwu.models.KFTWorkOrder;
+import com.demo.runwu.utils.KFTConfig;
 import com.lycheepay.gateway.client.GatewayClientException;
 import com.lycheepay.gateway.client.KftSecMerchantService;
 import com.lycheepay.gateway.client.dto.secmerchant.*;
@@ -11,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
@@ -23,47 +26,32 @@ import java.nio.charset.StandardCharsets;
 public class KFTMerchantService {
     private static KftSecMerchantService service;
 
-    @Value("${kftpay.httpDomain}")
-    private String httpDomain;
-    @Value("${kftpay.merchant.ip}")
-    private String merchantIp;
-    @Value("${kftpay.merchant.keyStorePath}")
-    private String keyStorePath;
-    @Value("${kftpay.merchant.keyStorePassword}")
-    private String keyStorePassword;
-    @Value("${kftpay.merchant.keyPassword}")
-    private String keyPassword;
-    @Value("${kftpay.merchant.tempZipFilePath}")
-    private String tempZipFilePath;
-    @Value("${kftpay.merchant.merchantId}")
-    private String merchantId;
-    @Value("${kftpay.merchant.sftp.domain}")
-    private String sftpDomain;
-    @Value("${kftpay.merchant.sftp.password}")
-    private String sftpPassword;
+    @Autowired
+    private KFTConfig kftConfig;
 
     public KFTMerchantService init() throws Exception {
-        SignProvider keystoreSignProvider = new KeystoreSignProvider("PKCS12", keyStorePath, keyStorePassword.toCharArray(), null, keyPassword.toCharArray());
+        SignProvider keystoreSignProvider = new KeystoreSignProvider("PKCS12", kftConfig.keyStorePath, kftConfig.keyStorePassword.toCharArray(), null, kftConfig.keyPassword.toCharArray());
         // 签名提供者、商户服务器IP(callerIp)、国际化、对账文件或批量回盘文件下载，商户本地保存路径
-        service = new KftSecMerchantService(keystoreSignProvider, merchantIp, "zh_CN", tempZipFilePath);
-        service.setHttpDomain(httpDomain); // 测试环境交易请求Http地址，不设置默认为生产地址：merchant.kftpay.com.cn
+        service = new KftSecMerchantService(keystoreSignProvider, kftConfig.merchantIp, "zh_CN", kftConfig.tempZipFilePath);
+        service.setHttpDomain(kftConfig.httpDomain); // 测试环境交易请求Http地址，不设置默认为生产地址：merchant.kftpay.com.cn
         service.setConnectionTimeoutSeconds(1 * 60);// 连接超时时间（单位秒）,不设置则默认30秒
         service.setResponseTimeoutSeconds(10 * 60);// 响应超时时间（单位秒）,不设置则默认300秒
-        service.setSftpAccountName(merchantId);//sftp账号,与商户账户编号相同（MerchantId）
-        service.setSftpPassword(sftpPassword);//sftp密码 测试环境:账号后6位
-        service.setSftpDomain(sftpDomain);//sftp域名
+        service.setSftpAccountName(kftConfig.merchantId);//sftp账号,与商户账户编号相同（MerchantId）
+        service.setSftpPassword(kftConfig.sftpPassword);//sftp密码 测试环境:账号后6位
+        service.setSftpDomain(kftConfig.sftpDomain);//sftp域名
         service.setSftpPort(22222);
         return this;
     }
 
-    public SettledSecMerchantResponseDTO merchantBaseInfoAdd(KFTMerchantBaseInfo kftMerchantBaseInfo) throws IOException, GatewayClientException {
+    public KFTWorkOrder merchantBaseInfoAdd(KFTMerchantBaseInfo kftMerchantBaseInfo) throws IOException, GatewayClientException {
         SettledSecMerchantRequestDTO reqDTO = new SettledSecMerchantRequestDTO();
         reqDTO.setReqNo(String.valueOf(System.currentTimeMillis()));//请求编号
-        reqDTO.setOrderNo(String.valueOf(System.currentTimeMillis()));//用于标识商户发起的一笔交易
+        String orderNo = String.valueOf(System.currentTimeMillis());
+        reqDTO.setOrderNo(orderNo);//用于标识商户发起的一笔交易
         reqDTO.setService("amp_secmerchant_baseinfo_add");//接口名称，固定不变
-        reqDTO.setVersion("1.0.0-IEST");//测试：1.0.0-IEST,生产：1.0.0-PRD
+        reqDTO.setVersion(kftConfig.version);//测试：1.0.0-IEST,生产：1.0.0-PRD
 
-        reqDTO.setMerchantId(merchantId);//快付通配给商户的账户编号（测试和生产环境不同）
+        reqDTO.setMerchantId(kftConfig.merchantId);//快付通配给商户的账户编号（测试和生产环境不同）
         reqDTO.setSecMerchantName(kftMerchantBaseInfo.secMerchantName);//二级商户名称
         reqDTO.setShortName(kftMerchantBaseInfo.shortName);//会显示在用户订单信息中
         //reqDTO.setProvince(province);//可空
@@ -79,7 +67,7 @@ public class KFTMerchantService {
         reqDTO.setBusinessMode(kftMerchantBaseInfo.businessMode);
         reqDTO.setRegisteredFundStr(kftMerchantBaseInfo.registeredFundStr);
         reqDTO.setRemark("");//可空，介绍商户营业内容等
-        reqDTO.setMerchantProperty("3");//商户类型：1：个人、2：企业、3：个体工商户、4：事业单位
+        reqDTO.setMerchantProperty(kftMerchantBaseInfo.merchantProperty);//商户类型：1：个人、2：企业、3：个体工商户、4：事业单位
         reqDTO.setMerchantAttribute("1");//商户属性 1实体特约商户 2 网络特约商户 3 实体兼网络特约商户
         reqDTO.setBusinessFunctions("[\"010101\",\"010102\",\"010201\",\"010202\"]");
 
@@ -98,18 +86,21 @@ public class KFTMerchantService {
 //        reqDTO.setMerchantEnglishName(merchantEnglishName);
 //        reqDTO.setMerchantBankBranchNo(merchantBankBranchNo);
 //        reqDTO.setMerchantBankBranchName(merchantBankBranchName);
-
-        return service.settledSecMerchant(reqDTO);
+        SettledSecMerchantResponseDTO settledSecMerchantResponseDTO = service.settledSecMerchant(reqDTO);
+        KFTWorkOrder kftWorkOrder = new KFTWorkOrder();
+        kftWorkOrder.setOrderNo(orderNo).setResult(settledSecMerchantResponseDTO);
+        return kftWorkOrder;
     }
 
 
-    public BaseSecMerchantRespDTO merchantBaseInfoUpdate(KFTMerchantBaseInfo kftMerchantBaseInfo) throws GatewayClientException, IOException {
+    public KFTWorkOrder merchantBaseInfoUpdate(KFTMerchantBaseInfo kftMerchantBaseInfo) throws GatewayClientException, IOException {
         UpdateSecMerchantRequestDTO reqDTO = new UpdateSecMerchantRequestDTO();
         reqDTO.setReqNo(String.valueOf(System.currentTimeMillis()));//请求编号
-        reqDTO.setOrderNo(String.valueOf(System.currentTimeMillis()));//用于标识商户发起的一笔交易
+        String orderNo = String.valueOf(System.currentTimeMillis());
+        reqDTO.setOrderNo(orderNo);//用于标识商户发起的一笔交易
         reqDTO.setService("amp_secmerchant_baseinfo_update");//接口名称，固定不变
-        reqDTO.setVersion("1.0.0-IEST");//接口版本号，测试:1.0.0-IEST,生产:1.0.0-PRD
-        reqDTO.setMerchantId(merchantId);//快付通配给商户的账户编号（测试和生产环境不同）
+        reqDTO.setVersion(kftConfig.version);//接口版本号，测试:1.0.0-IEST,生产:1.0.0-PRD
+        reqDTO.setMerchantId(kftConfig.merchantId);//快付通配给商户的账户编号（测试和生产环境不同）
         reqDTO.setSecMerchantName(kftMerchantBaseInfo.secMerchantName);//二级商户名称
         reqDTO.setShortName(kftMerchantBaseInfo.shortName);//会显示在用户订单信息中
         //reqDTO.setProvince(province);//可空
@@ -123,9 +114,9 @@ public class KFTMerchantService {
         reqDTO.setCategory(kftMerchantBaseInfo.category);//经营类目
         reqDTO.setBusinessScene(kftMerchantBaseInfo.businessScene);//业务场景说明
         reqDTO.setBusinessMode(kftMerchantBaseInfo.businessMode);
-        reqDTO.setMerchantProperty("3");//商户类型：1：个人、2：企业、3：个体工商户、4：事业单位
-        reqDTO.setCategory("\"[\\\"010101\\\",\\\"010102\\\",\\\"010201\\\",\\\"010202\\\"]\"");//经营类目
-        reqDTO.setBusinessScene("");//业务场景说明
+        reqDTO.setMerchantProperty(kftMerchantBaseInfo.merchantProperty);//商户类型：1：个人、2：企业、3：个体工商户、4：事业单位
+        reqDTO.setCategory("0010010001");//经营类目
+        reqDTO.setBusinessScene(kftMerchantBaseInfo.businessScene);//业务场景说明
         reqDTO.setRemark("");//可空，介绍商户营业内容等
         reqDTO.setCertPath(kftMerchantBaseInfo.fileName);//SFTP目录下的地址，默认在mpp目录下
         String certDigest = KFTMerchantService.md5File(kftMerchantBaseInfo.localFilePath);
@@ -146,19 +137,23 @@ public class KFTMerchantService {
 //        reqDTO.setMerchantBankBranchNo("105337000019");
 //        reqDTO.setMerchantBankBranchName("中国建设银行绍兴分行");
 
-        return service.updateSecMerchant(reqDTO);
+        BaseSecMerchantRespDTO baseSecMerchantRespDTO =  service.updateSecMerchant(reqDTO);
+        KFTWorkOrder kftWorkOrder = new KFTWorkOrder();
+        kftWorkOrder.setOrderNo(orderNo).setResult(baseSecMerchantRespDTO);
+        return kftWorkOrder;
     }
 
-    public QuerySecMerchantResponseDTO merchantBaseInfoQuery(String certNo) throws GatewayClientException {
+    public QuerySecMerchantResponseDTO merchantBaseInfoQuery(KFTMerchantQuery query) throws GatewayClientException {
         QuerySecMerchantRequestDTO reqDTO = new QuerySecMerchantRequestDTO();
         reqDTO.setService("amp_secmerchant_baseinfo_query");//接口名称，固定不变
-        reqDTO.setVersion("1.0.0-IEST");//测试：1.0.0-IEST,生产：1.0.0-PRD
-        reqDTO.setMerchantId("2024031400105169");//快付通配给商户的账户编号（测试和生产环境不同）
-        reqDTO.setMerchantProperty("3");//商户类型：1：个人2：企业3：个体工商户4：事业单位
-        reqDTO.setCertNo(certNo);//商户类型是2、3传营业执照,1传身份证号
-//        reqDTO.setOrderNo("");//查询交易编号,对应新增或者修改里面的同名参数orderNo值
-
-        return service.querySecMerchant(reqDTO);
+        reqDTO.setVersion(kftConfig.version);//测试：1.0.0-IEST,生产：1.0.0-PRD
+        reqDTO.setMerchantId(kftConfig.merchantId);//快付通配给商户的账户编号（测试和生产环境不同）
+        reqDTO.setMerchantProperty(query.merchantProperty);//商户类型：1：个人2：企业3：个体工商户4：事业单位
+        reqDTO.setCertNo(query.certNo);//商户类型是2、3传营业执照,1传身份证号
+        reqDTO.setOrderNo(query.orderNo);//查询交易编号,对应新增或者修改里面的同名参数orderNo值
+        QuerySecMerchantResponseDTO res = service.querySecMerchant(reqDTO);
+        log.info(JSON.toJSONString(res));
+        return res;
     }
 
     public void uploadFile(String localFilePath) throws GatewayClientException {

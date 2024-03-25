@@ -15,6 +15,7 @@ public class KFTMerchantBaseInfo implements Serializable {
     public String contactPhone;
     public String contactEmail;
     public String category;
+    public String merchantProperty;
     public String businessScene;
     public String businessMode;
     public String registeredFundStr;
@@ -38,6 +39,7 @@ public class KFTMerchantBaseInfo implements Serializable {
                 ", contactPhone='" + contactPhone + '\'' +
                 ", contactEmail='" + contactEmail + '\'' +
                 ", category='" + category + '\'' +
+                ", merchantProperty='" + merchantProperty + '\'' +
                 ", businessScene='" + businessScene + '\'' +
                 ", businessMode='" + businessMode + '\'' +
                 ", registeredFundStr='" + registeredFundStr + '\'' +
