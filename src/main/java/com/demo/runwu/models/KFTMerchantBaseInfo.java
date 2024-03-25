@@ -21,6 +21,7 @@ public class KFTMerchantBaseInfo implements Serializable {
     public String settleBankNo;
     public String settleBankAccountNo;
     public String settleName;
+    public List<KFTCertInfo> corpCertInfo;
     public List<KFTCustBeneficiary> custBeneficiaryInfo;
 
     @Override
@@ -43,6 +44,7 @@ public class KFTMerchantBaseInfo implements Serializable {
                 ", settleBankNo='" + settleBankNo + '\'' +
                 ", settleBankAccountNo='" + settleBankAccountNo + '\'' +
                 ", settleName='" + settleName + '\'' +
+                ", corpCertInfo=" + corpCertInfo +
                 ", custBeneficiaryInfo=" + custBeneficiaryInfo +
                 '}';
     }

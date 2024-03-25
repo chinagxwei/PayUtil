@@ -3,9 +3,9 @@ kftpay:
   responseTimeoutSeconds: 600
   httpDomain: 'test-merchant.kftpay.com.cn'
   merchant:
-    notifyUrl: '"www.baidu.com"'
-    tempZipFilePath: 'c:/zip'
-    keyStorePath: 'e:/keystore/pfx.pfx'
+    notifyUrl: 'www.baidu.com'
+    tempZipFilePath: '/www/wwwroot/spring-boot-runwupay/target/temp/test.zip'
+    keyStorePath: '/www/wwwroot/spring-boot-runwupay/target/temp/pfx.pfx'
     keyStorePassword: '123456'
     keyPassword: '123456'
     merchantId: '2024031400105169'
@@ -14,6 +14,16 @@ kftpay:
       appid: ''
     alipay:
       appid: ''
+    sftp:
+      domain: '183.56.161.108'
+      password: '105169'
+  test:
+    tempZipFileName: 'test.zip'
+    tempZipFilePath: '/www/wwwroot/spring-boot-runwupay/target/temp/test.zip'
+    keyStorePath: '/www/wwwroot/spring-boot-runwupay/target/temp/pfx.pfx'
+    keyStorePassword: '123456'
+    keyPassword: '123456'
+    merchantId: '2024031400105169'
     sftp:
       domain: 'test-sftp.kftpay.com.cn'
       password: '105169'

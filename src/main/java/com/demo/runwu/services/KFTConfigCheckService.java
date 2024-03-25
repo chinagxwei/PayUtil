@@ -22,8 +22,6 @@ public class KFTConfigCheckService {
     private String merchantId;
     @Value("${kftpay.merchant.sftp.domain}")
     private String sftpDomain;
-    @Value("${kftpay.merchant.sftp.account}")
-    private String sftpAccountName;
     @Value("${kftpay.merchant.sftp.password}")
     private String sftpPassword;
     @Value("${kftpay.merchant.wechat.appid}")
@@ -42,7 +40,6 @@ public class KFTConfigCheckService {
                 ", tempZipFilePath='" + tempZipFilePath + '\'' +
                 ", merchantId='" + merchantId + '\'' +
                 ", sftpDomain='" + sftpDomain + '\'' +
-                ", sftpAccountName='" + sftpAccountName + '\'' +
                 ", sftpPassword='" + sftpPassword + '\'' +
                 ", wechatPayAppID='" + wechatPayAppID + '\'' +
                 ", aliPayAppID='" + aliPayAppID + '\'' +

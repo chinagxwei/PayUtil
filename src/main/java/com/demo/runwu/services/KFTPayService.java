@@ -7,9 +7,11 @@ import com.lycheepay.gateway.client.dto.initiativepay.PublicNoPayReqDTO;
 import com.lycheepay.gateway.client.dto.initiativepay.PublicNoPayRespDTO;
 import com.lycheepay.gateway.client.security.KeystoreSignProvider;
 import com.lycheepay.gateway.client.security.SignProvider;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class KFTPayService {
 

@@ -8,6 +8,7 @@ import com.lycheepay.gateway.client.dto.secmerchant.SettledSecMerchantRequestDTO
 import com.lycheepay.gateway.client.dto.secmerchant.SettledSecMerchantResponseDTO;
 import com.lycheepay.gateway.client.security.KeystoreSignProvider;
 import com.lycheepay.gateway.client.security.SignProvider;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -18,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+@Slf4j
 @Service
 public class KFTMerchantService {
     private static KftSecMerchantService service;
@@ -51,6 +53,7 @@ public class KFTMerchantService {
         service.setSftpAccountName(merchantId);//sftp账号,与商户账户编号相同（MerchantId）
         service.setSftpPassword(sftpPassword);//sftp密码 测试环境:账号后6位
         service.setSftpDomain(sftpDomain);//sftp域名
+        service.setSftpPort(22222);
         return this;
     }
 
@@ -85,6 +88,8 @@ public class KFTMerchantService {
 
 //        reqDTO.setCorpCertInfo("[{\"certNo\":\"440305199109241211\",\"certType\":\"0\",\"certValidDate\":\"20991231\"},{\"certNo\":\"11311788100133ABB1\",\"certType\":\"Y\",\"certValidDate\":\"20991231\"}]");
         reqDTO.setCertPath(kftMerchantBaseInfo.fileName);//SFTP目录下的地址，默认在mpp目录下
+        log.info(JSON.toJSONString(kftMerchantBaseInfo.custBeneficiaryInfo));
+        reqDTO.setCorpCertInfo(JSON.toJSONString(kftMerchantBaseInfo.corpCertInfo));
         reqDTO.setCustBeneficiaryInfo(JSON.toJSONString(kftMerchantBaseInfo.custBeneficiaryInfo));
         String certDigest = KFTMerchantService.md5File(kftMerchantBaseInfo.localFilePath);
         reqDTO.setCertDigest(certDigest);//上报文件签名
